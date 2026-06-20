@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Weather App</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
+        <h1 class="text-3xl font-bold text-center text-slate-800 mb-6">Weather Dashboard</h1>
+        
+        <form method="POST" class="flex gap-2 mb-6">
+            {% csrf_token %}
+            <input type="text" name="city" placeholder="Enter city name..." required
+                   class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button type="submit" 
+                    class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium">
+                Search
+            </button>
+        </form>
+
+        {% if error_msg %}
+            <div class="bg-red-100 text-red-700 p-3 rounded-lg text-center font-medium mb-4">
+                {{ error_msg }}
+            </div>
+        {% endif %}
+
+        {% if weather_data %}
+            <div class="text-center">
+                <h2 class="text-2xl font-semibold text-slate-700">
+                    {{ weather_data.city }}, <span class="text-slate-500 text-lg">{{ weather_data.country }}</span>
+                </h2>
+                
+                <div class="flex items-center justify-center mt-2">
+                    <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}@2x.png" alt="Weather Icon" class="w-20 h-20">
+                    <span class="text-5xl font-bold text-slate-800">{{ weather_data.temperature }}°C</span>
+                </div>
+
+                <p class="text-slate-600 text-lg font-medium capitalize mt-1">{{ weather_data.description }}</p>
+
+                <div class="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-slate-100">
+                    <div class="bg-slate-50 p-3 rounded-xl">
+                        <p class="text-xs text-slate-400 font-semibold tracking-wide uppercase">Humidity</p>
+                        <p class="text-lg font-bold text-slate-700">{{ weather_data.humidity }}%</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl">
+                        <p class="text-xs text-slate-400 font-semibold tracking-wide uppercase">Wind Speed</p>
+                        <p class="text-lg font-bold text-slate-700">{{ weather_data.wind_speed }} m/s</p>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {% if not error_msg %}
+                <p class="text-center text-slate-400">Search for a city to see its live weather statistics.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+</body>
+</html>
